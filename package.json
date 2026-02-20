@@ -1,0 +1,31 @@
+{
+  "name": "solid-poll",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A polling app based on Solid protocol",
+  "keywords": [
+    "solid",
+    "solidproject",
+    "poll",
+    "solid-protocol"
+  ],
+  "homepage": "https://github.com/mrkvon/solid-poll#readme",
+  "bugs": {
+    "url": "https://github.com/mrkvon/solid-poll/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrkvon/solid-poll.git"
+  },
+  "license": "MIT",
+  "author": "mrkvon",
+  "type": "module",
+  "workspaces": [
+    "app",
+    "agent",
+    "e2e"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

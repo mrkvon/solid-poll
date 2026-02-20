@@ -28,5 +28,17 @@ The unedited results are in [schema.org shape](../schema/poll-schema.shacl) and 
 
 ## Developing
 
+### Setting things up
+
 Next, let's start building the app. It will be a Vite + Lit app. Recently I started enjoying building with web standards, and Lit is as close to that as one can get. I will use [Web Awesome](https://webawesome.com/) for UI components.
+
+The agent hosting the inbox and processing entries will be a koa server. So, let's turn this project into a npm workspace with app and agent packages with `npm init`.
+
+Afterwards I initialized the frontend app with
+
+```sh
+npm create vite@latest
+```
+
+
 
