@@ -59,3 +59,9 @@ npm init playwright@latest -w e2e
 ```
 
 Now, let's finally get to the development itself!
+
+### Defining behaviour in tests
+
+I like to develop test-first. I write down challenges. Empty tests describing how the system should behave, which I later turn into failing tests, which I'll then make pass. This is process is happening partially in parallel, but this is the general sequence.
+
+So I'll create a test file for each feature, and add unimplemented tests to it.
