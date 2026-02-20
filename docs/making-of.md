@@ -65,3 +65,11 @@ Now, let's finally get to the development itself!
 I like to develop test-first. I write down challenges. Empty tests describing how the system should behave, which I later turn into failing tests, which I'll then make pass. This is process is happening partially in parallel, but this is the general sequence.
 
 So I'll create a test file for each feature, and add unimplemented tests to it.
+
+### Implementing authentication
+
+I'll try out `@uvdsl/solid-oidc-client-browser` as Solid authentication library. I'll install web awesome and use components from there to select oidc issuer or webId, then sign in. I'll show name of the current user after signin.
+
+I write each step in [tests first](../e2e/auth.spec.ts), then I make it pass, then go to the next step, etc.
+
+For the Playwright tests, I also install as dev dependency and run Community Solid Server before the tests. I create random pods for each test with css-authn, so I don't have to worry about clearing them between tests.
