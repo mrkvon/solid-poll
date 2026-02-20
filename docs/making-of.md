@@ -42,8 +42,20 @@ npm create vite@latest app
 
 Next, I set up koa server within agent workspace.
 
-Next I set up some best practices for code quality with eslint and prettier. Later I might add knip.
+Next I set up eslint:
 
-TODO next:
+```sh
+npm init @eslint/config@latest
+```
 
-- playwright
+and Prettier by following https://prettier.io/docs/install.
+
+Later I might add knip.
+
+I also set up Playwright tests:
+
+```sh
+npm init playwright@latest -w e2e
+```
+
+Now, let's finally get to the development itself!
