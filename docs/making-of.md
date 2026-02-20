@@ -42,9 +42,10 @@ npm create vite@latest app
 
 Next, I set up koa server within agent workspace.
 
+Next I set up some best practices for code quality with eslint, prettier, and knip.
+
 TODO next:
 
-- eslint, prettier, knip
 - playwright
 
 
