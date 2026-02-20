@@ -1,0 +1,128 @@
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix schema:  <https://schema.org/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix spoll:   <https://solidpoll.example/ns#> .
+
+# ── Poll (Question) ─────────────────────────────────────
+
+spoll:PollShape a sh:NodeShape ;
+    sh:targetClass schema:Question ;
+
+    sh:property [
+        sh:path schema:text ;
+        sh:name "question text" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path schema:description ;
+        sh:name "question detail / context" ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path schema:suggestedAnswer ;
+        sh:name "answer options" ;
+        sh:class schema:Answer ;
+        # no minCount — poll can exist before answers arrive
+    ] ;
+    sh:property [
+        sh:path schema:author ;
+        sh:name "poll creator (WebID)" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path schema:dateCreated ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] ;
+    sh:property [
+        sh:path schema:dateModified ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] .
+
+# ── Answer ───────────────────────────────────────────────
+
+spoll:AnswerShape a sh:NodeShape ;
+    sh:targetClass schema:Answer ;
+
+    sh:property [
+        sh:path schema:text ;
+        sh:name "answer text" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path schema:parentItem ;
+        sh:name "parent poll" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class schema:Question ;
+    ] ;
+    sh:property [
+        sh:path schema:author ;
+        sh:name "answer author (WebID)" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path schema:dateCreated ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] ;
+    sh:property [
+        sh:path schema:dateModified ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] .
+
+# ── Vote ─────────────────────────────────────────────────
+# Existence of the record = +1 upvote.
+# Extend later with spoll:value xsd:integer for weighted votes.
+
+spoll:VoteShape a sh:NodeShape ;
+    sh:targetClass schema:VoteAction ;
+
+    sh:property [
+        sh:path schema:agent ;
+        sh:name "voter (WebID)" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path schema:object ;
+        sh:name "voted-on answer" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class schema:Answer ;
+    ] ;
+    sh:property [
+        sh:path schema:description ;
+        sh:name "vote reason / context" ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path schema:startTime ;
+        sh:name "vote timestamp" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] ;
+    sh:property [
+        sh:path schema:actionStatus ;
+        sh:name "action status" ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        # expected: schema:CompletedActionStatus
+    ] .

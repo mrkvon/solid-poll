@@ -1,0 +1,134 @@
+@prefix sh:         <http://www.w3.org/ns/shacl#> .
+@prefix sioc:       <http://rdfs.org/sioc/ns#> .
+@prefix sioc_types: <http://rdfs.org/sioc/types#> .
+@prefix dcterms:    <http://purl.org/dc/terms/> .
+@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+@prefix spoll:      <https://solidpoll.example/ns#> .
+
+# ── Poll ─────────────────────────────────────────────────
+# sioc_types:Poll rdfs:subClassOf sioc:Item
+
+spoll:PollShape a sh:NodeShape ;
+    sh:targetClass sioc_types:Poll ;
+
+    sh:property [
+        sh:path sioc:content ;
+        sh:name "question text" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path dcterms:description ;
+        sh:name "question detail / context" ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path sioc:has_reply ;
+        sh:name "answer options" ;
+        sh:class sioc_types:Answer ;
+    ] ;
+    sh:property [
+        sh:path dcterms:creator ;
+        sh:name "poll creator (WebID)" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path dcterms:created ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] ;
+    sh:property [
+        sh:path dcterms:modified ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] .
+
+# ── Answer ───────────────────────────────────────────────
+# sioc_types:Answer rdfs:subClassOf sioc:Post
+#                                   rdfs:subClassOf sioc:Item
+
+spoll:AnswerShape a sh:NodeShape ;
+    sh:targetClass sioc_types:Answer ;
+
+    sh:property [
+        sh:path sioc:content ;
+        sh:name "answer text" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path sioc:reply_of ;
+        sh:name "parent poll" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class sioc_types:Poll ;
+    ] ;
+    sh:property [
+        sh:path dcterms:creator ;
+        sh:name "answer author (WebID)" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path dcterms:created ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] ;
+    sh:property [
+        sh:path dcterms:modified ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] .
+
+# ── Vote ─────────────────────────────────────────────────
+# Custom class — SIOC has no vote entity
+
+spoll:VoteShape a sh:NodeShape ;
+    sh:targetClass spoll:Vote ;
+
+    sh:property [
+        sh:path spoll:option ;
+        sh:name "voted-on answer" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class sioc_types:Answer ;
+    ] ;
+    sh:property [
+        sh:path spoll:value ;
+        sh:name "vote weight" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:integer ;
+    ] ;
+    sh:property [
+        sh:path dcterms:description ;
+        sh:name "vote reason / context" ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path dcterms:creator ;
+        sh:name "voter (WebID)" ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path dcterms:created ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] ;
+    sh:property [
+        sh:path dcterms:modified ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:dateTime ;
+    ] .
