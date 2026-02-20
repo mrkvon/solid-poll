@@ -37,8 +37,16 @@ The agent hosting the inbox and processing entries will be a koa server. So, let
 Afterwards I initialized the frontend app with
 
 ```sh
-npm create vite@latest
+npm create vite@latest app
 ```
+
+Next, I set up koa server within agent workspace.
+
+TODO next:
+
+- eslint, prettier, knip
+- playwright
+
 
 
 
