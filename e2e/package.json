@@ -7,7 +7,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
-    "@solid/community-server": "^7.1.8",
+    "@solid/community-server": "^8.0.0-alpha.1",
     "@types/node": "^25.3.0",
     "css-authn": "^0.4.0"
   }

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@awesome.me/webawesome": "^3.2.1",
+    "@ldo/connected": "^1.0.0-alpha.32",
+    "@ldo/connected-solid": "^1.0.0-alpha.32",
     "@ldo/ldo": "^1.0.0-alpha.32",
     "@lit-labs/router": "^0.1.4",
     "@lit-labs/signals": "^0.2.0",

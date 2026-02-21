@@ -8,8 +8,8 @@ import '@awesome.me/webawesome/dist/styles/themes/default.css'
 import { SignalWatcher } from '@lit-labs/signals'
 import { LitElement, css, html } from 'lit'
 import { customElement } from 'lit/decorators.js'
-import { init, isActive, isLoading, session, webId } from './session'
 import './spoll-auth-dialog.js'
+import { init, isActive, isLoading, session, webId } from './state/session.js'
 
 @customElement('spoll-auth')
 export class SpollAuth extends SignalWatcher(LitElement) {

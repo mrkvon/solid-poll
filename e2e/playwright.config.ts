@@ -84,7 +84,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: 'npx community-solid-server -p 4000',
+      command: 'npx @solid/community-server -p 4000',
       url: 'http://localhost:4000',
       reuseExistingServer: !process.env.CI,
     },

@@ -1,4 +1,4 @@
-import test, { expect } from '@playwright/test'
+import test, { expect, Page } from '@playwright/test'
 import { createRandomUser, signin, User } from './helpers/account'
 
 test.describe('Create and manage poll', () => {
@@ -47,10 +47,8 @@ test.describe('Create and manage poll', () => {
       )
   })
 
-  test('save the poll to the file - data, inbox, access control allowing bot to write', async ({
-    page,
-  }) => {
-    const resourceUrl = new URL('polls/test-poll', user.account.podUrl)
+  test('save the poll data to the file', async ({ page }) => {
+    const resourceUrl = new URL('data/polls/test-poll', user.account.podUrl)
     const pollUri = new URL(resourceUrl)
     pollUri.hash = '#poll'
 
@@ -78,11 +76,49 @@ test.describe('Create and manage poll', () => {
     expect(ttlResponse.ok).toBe(true)
     const ttl = await ttlResponse.text()
 
-    console.log(ttl)
+    console.log(ttl) // TODO test this
+
+    expect(ttl).toContain('poll')
   })
 
+  test('save access control allowing bot to write and public to read (WAC)', async ({
+    page,
+  }) => {
+    const resourceUrl = new URL('polls/test-poll', user.account.podUrl)
+    const pollUri = new URL(resourceUrl)
+    pollUri.hash = '#poll'
+
+    await fillForm(page, { resource: resourceUrl.toString() })
+
+    // redirect to poll URL
+    await expect(page).toHaveURL(
+      `/polls/${encodeURIComponent(pollUri.toString())}`,
+    )
+
+    // check ACL
+    const aclResponse = await user.fetch(resourceUrl + '.acl')
+    expect(aclResponse.status).toBe(200)
+    expect(aclResponse.ok).toBe(true)
+    const acl = await aclResponse.text()
+
+    console.log(acl) // TODO test this
+  })
+  test.fixme('save access control allowing bot to write and public to read (ACP)', async () => {})
+  test.fixme('save the inbox', async () => {})
   test.fixme("don't save to existing file", async () => {})
   test.fixme('update the poll', () => {})
   test.fixme('activate and desactivate the poll', () => {})
   test.fixme('other people can not update, activate, desactivate or delete the poll', () => {})
 })
+
+const fillForm = async (page: Page, options: { resource: string }) => {
+  await page
+    .getByRole('textbox', { name: 'question' })
+    .first()
+    .fill('What is the meaning of life, universe and everything?')
+  await page
+    .getByRole('textbox', { name: 'details' })
+    .fill("This is some detailed, multiline description\n\nyes it's multiline.")
+  await page.getByRole('textbox', { name: 'resource' }).fill(options.resource)
+  await page.getByRole('button', { name: 'create poll' }).click()
+}

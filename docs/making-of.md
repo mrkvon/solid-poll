@@ -78,4 +78,14 @@ For the Playwright tests, I also install as dev dependency and run Community Sol
 
 We're getting deeper into the weeds of Solid now. Let's create a form, allow person to select a folder in their pod, and create a poll.
 
-I'll use LDO to handle creating RDF.
+I use LDO to handle creating RDF.
+
+The UX is very raw now, and can be iteratively improved later.
+
+I converted our SHACL shapes to shex manually, then built LDO typings with @ldo/cli. At the end I went with [SIOC](http://rdfs.org/sioc/ns#) vocabulary, and its extension [SIOC Types](http://rdfs.org/sioc/types#).
+
+### Viewing a poll
+
+Using LDO, I build an interface to view the poll. Later I'll add editing options for signed-in users.
+
+But first, I have to make the poll readable to public.

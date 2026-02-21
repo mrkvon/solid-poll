@@ -10,7 +10,7 @@ import '@awesome.me/webawesome/dist/components/input/input.styles.js'
 import '@awesome.me/webawesome/dist/styles/themes/default.css'
 import { LitElement, css, html } from 'lit'
 import { customElement, query } from 'lit/decorators.js'
-import { session } from './session'
+import { session } from './state/session'
 
 @customElement('spoll-auth-dialog')
 export class SpollAuthDialog extends LitElement {
