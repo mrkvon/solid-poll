@@ -1,0 +1,36 @@
+# This shape is provided by default as an example
+# You can create your own shape to fit your needs using ShEx (https://shex.io)
+# Also check out https://shaperepo.com for examples of more shapes.
+
+PREFIX ex: <https://example.com/>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <https://schema.org/>
+PREFIX sioc: <http://rdfs.org/sioc/ns#>
+PREFIX tsioc: <http://rdfs.org/sioc/types#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+ex:Poll EXTRA a {
+  a [ tsioc:Poll ] ;
+  a [ tsioc:Question ] ;
+  sioc:content xsd:string
+    // rdfs:comment  "question text" ;
+  dct:description xsd:string ? 
+    // rdfs:comment  "question detail / context" ;
+  sioc:has_reply @ex:Answer *
+    // rdfs:comment  "answers" ;
+  dct:creator IRI ;
+  dct:created xsd:dateTime ;
+  dct:modified xsd:dateTime * ;
+}
+
+ex:Answer EXTRA a {
+  a [ tsioc:Answer ] ;
+  sioc:content xsd:string
+    // rdfs:comment  "answer text" ;
+  sioc:reply_of @ex:Poll ;
+  dct:creator IRI ;
+  dct:created xsd:dateTime ;
+  dct:modified xsd:dateTime * ;
+}

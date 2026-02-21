@@ -3,12 +3,16 @@ import { SignalWatcher } from '@lit-labs/signals'
 import { LitElement, css, html } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import './spoll-auth.js'
+import './spoll-router.js'
 
 @customElement('spoll-app')
 export class SpollApp extends SignalWatcher(LitElement) {
   render() {
-    return html`<header>Solid Poll <spoll-auth></spoll-auth></header>
-      <main></main>
+    return html`<header>
+        Solid Poll
+        <spoll-auth></spoll-auth>
+      </header>
+      <main><spoll-router></spoll-router></main>
       <footer></footer>`
   }
 

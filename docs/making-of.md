@@ -73,3 +73,9 @@ I'll try out `@uvdsl/solid-oidc-client-browser` as Solid authentication library.
 I write each step in [tests first](../e2e/auth.spec.ts), then I make it pass, then go to the next step, etc.
 
 For the Playwright tests, I also install as dev dependency and run Community Solid Server before the tests. I create random pods for each test with css-authn, so I don't have to worry about clearing them between tests.
+
+### Creating a poll
+
+We're getting deeper into the weeds of Solid now. Let's create a form, allow person to select a folder in their pod, and create a poll.
+
+I'll use LDO to handle creating RDF.
