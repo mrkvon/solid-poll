@@ -1,53 +1,68 @@
+import type { SolidLeaf } from '@ldo/connected-solid'
+import { SignalWatcher } from '@lit-labs/signals'
 import { html, LitElement, type PropertyValues } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
 import { repeat } from 'lit/directives/repeat.js'
 import { PollShapeType } from './ldo/app.shapeTypes'
-import type { Poll } from './ldo/app.typings'
+import './spoll-answer-form.js'
 import { dataset } from './state/dataset'
+import { isLoggedIn } from './state/session'
 
 @customElement('spoll-poll')
-export class SpollPoll extends LitElement {
+export class SpollPoll extends SignalWatcher(LitElement) {
   @property() uri!: string
 
-  @state() poll?: Poll
+  @state() resource: SolidLeaf = dataset.getResource(this.uri) as SolidLeaf
+  // @state() poll?: Poll
+
+  private onPollUpdate = () => {
+    this.requestUpdate()
+  }
 
   protected async willUpdate(changed: PropertyValues) {
     if (changed.has('uri') && this.uri) {
-      const resource = dataset.getResource(this.uri)
-      if (resource.isPresent()) {
-        this.poll = dataset.usingType(PollShapeType).fromSubject(this.uri)
-      }
-      const result = await resource.read()
+      this.resource.off('update', this.onPollUpdate)
+      this.resource = dataset.getResource(this.uri) as SolidLeaf
+      this.resource.on('update', this.onPollUpdate)
+      const result = await this.resource.read()
       if (result.isError) throw result
-      this.poll = dataset.usingType(PollShapeType).fromSubject(this.uri)
     }
   }
 
+  disconnectedCallback(): void {
+    this.resource.off('update', this.onPollUpdate)
+    super.disconnectedCallback()
+  }
+
   render() {
+    const poll = dataset.usingType(PollShapeType).fromSubject(this.uri)
     return html`
       <dl>
         <dt>uri</dt>
-        <dd>${this.poll?.['@id']}</dd>
+        <dd>${poll?.['@id']}</dd>
 
         <dt>question</dt>
-        <dd data-testid="poll-question">${this.poll?.content}</dd>
+        <dd data-testid="poll-question">${poll?.content}</dd>
 
         <dt>created</dt>
-        <dd>${this.poll?.created}</dd>
+        <dd>${poll?.created}</dd>
 
         <dt>creator</dt>
-        <dd>${this.poll?.creator['@id']}</dd>
+        <dd>${poll?.creator?.['@id']}</dd>
 
         <dt>detail</dt>
-        <dd data-testid="poll-detail">${this.poll?.description}</dd>
+        <dd data-testid="poll-detail">${poll?.description}</dd>
 
         <dt>answers</dt>
         ${repeat(
-          this.poll?.hasReply ?? [],
+          poll?.hasReply ?? [],
           answer => answer['@id'],
-          answer => html`${answer.content}`,
+          answer => html`<dd>${answer.content}</dd>`,
         )}
       </dl>
+      ${isLoggedIn.get() && poll
+        ? html`<spoll-answer-form .poll=${poll}></spoll-answer-form>`
+        : undefined}
     `
   }
 }
@@ -55,5 +70,12 @@ export class SpollPoll extends LitElement {
 declare global {
   interface HTMLElementTagNameMap {
     'spoll-poll': SpollPoll
+  }
+}
+
+declare module '@ldo/connected-solid' {
+  interface SolidLeaf {
+    on(event: 'update', callback: () => void): void
+    off(event: 'update', callback: () => void): void
   }
 }

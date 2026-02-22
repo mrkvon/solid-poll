@@ -3,8 +3,10 @@
 # Also check out https://shaperepo.com for examples of more shapes.
 
 PREFIX ex: <https://example.com/>
+PREFIX as: <https://www.w3.org/ns/activitystreams#>
 PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX ldp: <http://www.w3.org/ns/ldp#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX schema: <https://schema.org/>
 PREFIX sioc: <http://rdfs.org/sioc/ns#>
@@ -23,6 +25,7 @@ ex:Poll EXTRA a {
   dct:creator IRI ;
   dct:created xsd:dateTime ;
   dct:modified xsd:dateTime * ;
+  ldp:inbox IRI ;
 }
 
 ex:Answer EXTRA a {
@@ -33,4 +36,10 @@ ex:Answer EXTRA a {
   dct:creator IRI ;
   dct:created xsd:dateTime ;
   dct:modified xsd:dateTime * ;
+}
+
+ex:AnswerActivity EXTRA a {
+  a [ as:Create ] ;
+  as:actor IRI ;
+  as:object @ex:Answer ;
 }

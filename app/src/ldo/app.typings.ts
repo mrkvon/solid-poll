@@ -37,6 +37,9 @@ export interface Poll {
   }
   created: string
   modified?: LdSet<string>
+  inbox: {
+    '@id': string
+  }
 }
 
 /**
@@ -58,4 +61,19 @@ export interface Answer {
   }
   created: string
   modified?: LdSet<string>
+}
+
+/**
+ * AnswerActivity Type
+ */
+export interface AnswerActivity {
+  '@id'?: string
+  '@context'?: LdoJsonldContext
+  type: LdSet<{
+    '@id': 'Create'
+  }>
+  actor: {
+    '@id': string
+  }
+  object: Answer
 }

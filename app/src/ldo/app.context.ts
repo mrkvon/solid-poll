@@ -43,6 +43,10 @@ export const appContext: LdoJsonldContext = {
         '@type': 'http://www.w3.org/2001/XMLSchema#dateTime',
         '@isCollection': true,
       },
+      inbox: {
+        '@id': 'http://www.w3.org/ns/ldp#inbox',
+        '@type': '@id',
+      },
     },
   },
   Question: {
@@ -77,6 +81,10 @@ export const appContext: LdoJsonldContext = {
         '@id': 'http://purl.org/dc/terms/modified',
         '@type': 'http://www.w3.org/2001/XMLSchema#dateTime',
         '@isCollection': true,
+      },
+      inbox: {
+        '@id': 'http://www.w3.org/ns/ldp#inbox',
+        '@type': '@id',
       },
     },
   },
@@ -139,5 +147,34 @@ export const appContext: LdoJsonldContext = {
     '@id': 'http://purl.org/dc/terms/modified',
     '@type': 'http://www.w3.org/2001/XMLSchema#dateTime',
     '@isCollection': true,
+  },
+  inbox: {
+    '@id': 'http://www.w3.org/ns/ldp#inbox',
+    '@type': '@id',
+  },
+  Create: {
+    '@id': 'https://www.w3.org/ns/activitystreams#Create',
+    '@context': {
+      type: {
+        '@id': '@type',
+        '@isCollection': true,
+      },
+      actor: {
+        '@id': 'https://www.w3.org/ns/activitystreams#actor',
+        '@type': '@id',
+      },
+      object: {
+        '@id': 'https://www.w3.org/ns/activitystreams#object',
+        '@type': '@id',
+      },
+    },
+  },
+  actor: {
+    '@id': 'https://www.w3.org/ns/activitystreams#actor',
+    '@type': '@id',
+  },
+  object: {
+    '@id': 'https://www.w3.org/ns/activitystreams#object',
+    '@type': '@id',
   },
 }

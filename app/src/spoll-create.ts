@@ -77,6 +77,7 @@ export class SpollCreate extends LitElement {
       description: data.detail || undefined,
       creator: { '@id': webId.get()! },
       created: new Date().toISOString(),
+      inbox: { '@id': 'http://localhost:3000/inbox/' }, // TODO fix!!!
     } satisfies Poll)
 
     await ensureContainers(resource)

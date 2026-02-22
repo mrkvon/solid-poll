@@ -110,6 +110,14 @@ export const appSchema: Schema = {
               min: 0,
               max: -1,
             },
+            {
+              type: 'TripleConstraint',
+              predicate: 'http://www.w3.org/ns/ldp#inbox',
+              valueExpr: {
+                type: 'NodeConstraint',
+                nodeKind: 'iri',
+              },
+            },
           ],
         },
         extra: ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'],
@@ -178,6 +186,40 @@ export const appSchema: Schema = {
               },
               min: 0,
               max: -1,
+            },
+          ],
+        },
+        extra: ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'],
+      },
+    },
+    {
+      id: 'https://example.com/AnswerActivity',
+      type: 'ShapeDecl',
+      shapeExpr: {
+        type: 'Shape',
+        expression: {
+          type: 'EachOf',
+          expressions: [
+            {
+              type: 'TripleConstraint',
+              predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+              valueExpr: {
+                type: 'NodeConstraint',
+                values: ['https://www.w3.org/ns/activitystreams#Create'],
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://www.w3.org/ns/activitystreams#actor',
+              valueExpr: {
+                type: 'NodeConstraint',
+                nodeKind: 'iri',
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://www.w3.org/ns/activitystreams#object',
+              valueExpr: 'https://example.com/Answer',
             },
           ],
         },

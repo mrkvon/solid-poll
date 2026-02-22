@@ -93,3 +93,13 @@ But first, I have to make the poll readable to public. I migrated to @ldo/connec
 Then I actually fetch and display poll data on page.
 
 ### Adding an answer
+
+Creating a form and submitting the data is straightforward. What's new is that the poll has an inbox attached to it, and it accepts our activity of adding an answer.
+
+The inbox belongs to a bot that will validate the activity and save my answer to the poll.
+
+It would be possible to save the answer locally on my own Pod and just send a link, but I choose saving it directly on poll for simplicity. It could be added later.
+
+So, a couple of challenges later, adding answers works now, completely unvalidated etc, but the happy path works anyways. This meant building koa agent, accepting and parsing activity in inbox, then saving answer to pod.
+
+On client side this meant figuring out reactivity for LDO. There is a resource.on('update') listener, which is great for re-rendering resources from dataset, when they update. Regrettably, this method is not a part of @ldo/connected-solid types, but it's there and it works. So much for reactivity of LDO resources in Lit.
