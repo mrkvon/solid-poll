@@ -7,7 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "npm run build && node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "dependencies": {
     "@koa/bodyparser": "^6.1.0",
@@ -24,7 +24,9 @@
   "devDependencies": {
     "@types/koa": "^3.0.1",
     "@types/node": "^25.3.0",
+    "rdf-namespaces": "^1.16.0",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }

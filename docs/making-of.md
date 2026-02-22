@@ -103,3 +103,16 @@ It would be possible to save the answer locally on my own Pod and just send a li
 So, a couple of challenges later, adding answers works now, completely unvalidated etc, but the happy path works anyways. This meant building koa agent, accepting and parsing activity in inbox, then saving answer to pod.
 
 On client side this meant figuring out reactivity for LDO. There is a resource.on('update') listener, which is great for re-rendering resources from dataset, when they update. Regrettably, this method is not a part of @ldo/connected-solid types, but it's there and it works. So much for reactivity of LDO resources in Lit.
+
+By this time (second or third day), it's clear this won't be a 1-day quick project.
+
+### Auhenticating and validating inbox requests
+
+Authn is achieved using a middleware based on @solid/access-token-verifier.
+Validation must be strict:
+
+- correct shape of data
+- actor must match authenticated agent
+- check that the authenticated agent has right to perform the action requested
+
+To do this properly, I'll set up integration tests for the agent with Vitest.

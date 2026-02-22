@@ -79,7 +79,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: 'npm run start -w agent',
+      command: 'PORT=3000 npm run start -w agent',
       url: 'http://localhost:3000',
       reuseExistingServer: !process.env.CI,
     },
