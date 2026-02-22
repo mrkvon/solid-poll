@@ -2,6 +2,7 @@ import { Router } from '@lit-labs/router'
 import { html, LitElement } from 'lit'
 import { customElement } from 'lit/decorators.js'
 import './spoll-create.js'
+import './spoll-poll.js'
 
 @customElement('spoll-router')
 export class SpollRouter extends LitElement {
@@ -19,7 +20,8 @@ export class SpollRouter extends LitElement {
     },
     {
       path: '/polls/:uri',
-      render: params => html`${decodeURIComponent(params.uri!)}`,
+      render: params =>
+        html`<spoll-poll uri=${decodeURIComponent(params.uri!)}></spoll-poll>`,
     },
     { path: '/*', render: () => html`404` },
   ])

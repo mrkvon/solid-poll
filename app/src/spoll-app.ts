@@ -9,7 +9,7 @@ import './spoll-router.js'
 export class SpollApp extends SignalWatcher(LitElement) {
   render() {
     return html`<header>
-        Solid Poll
+        <a href="/">Solid Poll</a>
         <spoll-auth></spoll-auth>
       </header>
       <main><spoll-router></spoll-router></main>

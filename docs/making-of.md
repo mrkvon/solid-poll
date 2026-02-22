@@ -88,4 +88,8 @@ I converted our SHACL shapes to shex manually, then built LDO typings with @ldo/
 
 Using LDO, I build an interface to view the poll. Later I'll add editing options for signed-in users.
 
-But first, I have to make the poll readable to public.
+But first, I have to make the poll readable to public. I migrated to @ldo/connected-solid to manage data in the process. It's an elegant and convenient library for managing RDF data, even though it could benefit from some fixes.
+
+Then I actually fetch and display poll data on page.
+
+### Adding an answer

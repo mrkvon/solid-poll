@@ -7,16 +7,18 @@ export interface User {
   fetch: typeof globalThis.fetch
 }
 
-export async function createRandomUser(options: {
-  oidcIssuer: string
-}): Promise<User> {
+export async function createRandomUser({
+  oidcIssuer = 'http://localhost:4000',
+}: {
+  oidcIssuer?: string
+} = {}): Promise<User> {
   const id = randomUUID()
 
   const account = await v7.createAccount({
     username: id,
     password: 'correcthorsebatterystaples',
     email: `${id}@example.com`,
-    oidcIssuer: options.oidcIssuer,
+    oidcIssuer,
   })
   const authFetch = await v7.getAuthenticatedFetch(account)
 
