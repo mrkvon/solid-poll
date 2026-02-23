@@ -43,8 +43,6 @@ export async function createAcl({
     aclttl += `\n<${acl.mode}> ${rule.access.map(a => `<${acl[a]}>`)} .`
   }
 
-  console.log(resource, resp.headers, aclttl)
-
   await user.fetch(aclurl, {
     method: 'PUT',
     body: aclttl,

@@ -41,7 +41,6 @@ export class SpollAnswerForm extends LitElement {
     const jsonld = await import('jsonld')
 
     const jld = await jsonld.fromRDF(getDataset(activity))
-    console.log(jld)
 
     const frame = {
       '@context': [
@@ -67,11 +66,6 @@ export class SpollAnswerForm extends LitElement {
         sioc: 'http://rdfs.org/sioc/ns#',
       },
     ] as unknown as ContextDefinition)
-
-    console.log(JSON.stringify(compacted, null, 2))
-
-    const ds = getDataset(activity)
-    console.log(ds.toString())
 
     if (!this.poll?.inbox?.['@id']) throw new Error('Inbox not found!')
 

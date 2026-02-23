@@ -9,8 +9,6 @@ import { HttpError } from '../utils/errors.js'
 const { namedNode, literal } = DataFactory
 
 export const saveToPoll: Middleware<{ config: AppConfig }> = async ctx => {
-  console.log(ctx.request.body)
-
   const doc = ctx.request.body as JsonLdDocument
 
   const frame = {
@@ -46,8 +44,6 @@ export const saveToPoll: Middleware<{ config: AppConfig }> = async ctx => {
       }
     }
   }
-
-  console.log(framed, 'framed')
 
   const authFetch = await getAuthenticatedFetch(ctx.state.config.webId)
 

@@ -8,7 +8,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig([
-  { ignores: ['package-lock.json'] },
+  { ignores: ['package-lock.json', '**/dist/'] },
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
     plugins: { js },
@@ -41,4 +41,5 @@ export default defineConfig([
     extends: ['css/recommended'],
   },
   eslintConfigPrettier,
+  { rules: { 'no-console': 'warn' } },
 ])

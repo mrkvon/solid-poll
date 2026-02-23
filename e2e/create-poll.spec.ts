@@ -76,7 +76,7 @@ test.describe('Create and manage poll', () => {
     expect(ttlResponse.ok).toBe(true)
     const ttl = await ttlResponse.text()
 
-    console.log(ttl) // TODO test this
+    // TODO test this
 
     expect(ttl).toContain('poll')
   })
@@ -101,7 +101,8 @@ test.describe('Create and manage poll', () => {
     expect(aclResponse.ok).toBe(true)
     const acl = await aclResponse.text()
 
-    console.log(acl) // TODO test this
+    // TODO test this
+    expect(acl).toContain('Read')
   })
   test.fixme('save access control allowing bot to write and public to read (ACP)', async () => {})
   test.fixme('save the inbox', async () => {})

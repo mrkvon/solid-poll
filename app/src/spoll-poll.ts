@@ -1,6 +1,6 @@
 import type { SolidLeaf } from '@ldo/connected-solid'
 import { SignalWatcher } from '@lit-labs/signals'
-import { html, LitElement, type PropertyValues } from 'lit'
+import { css, html, LitElement, type PropertyValues } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
 import { repeat } from 'lit/directives/repeat.js'
 import { PollShapeType } from './ldo/app.shapeTypes'
@@ -65,6 +65,12 @@ export class SpollPoll extends SignalWatcher(LitElement) {
         : undefined}
     `
   }
+
+  static styles = css`
+    dd {
+      word-wrap: break-word;
+    }
+  `
 }
 
 declare global {

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc --project tsconfig.production.json",
     "start": "npm run build && node dist/index.js",
     "test": "vitest"
   },
@@ -22,8 +22,12 @@
     "n3": "^1.26.0"
   },
   "devDependencies": {
+    "@solid/community-server": "^8.0.0-alpha.1",
     "@types/koa": "^3.0.1",
     "@types/node": "^25.3.0",
+    "css-authn": "^0.4.0",
+    "lorem-ipsum": "^2.0.8",
+    "parse-link-header": "^2.0.0",
     "rdf-namespaces": "^1.16.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",

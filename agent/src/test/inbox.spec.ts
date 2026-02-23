@@ -5,7 +5,7 @@ import { TestContext } from './setup.js'
 
 describe('POSTing to inbox', () => {
   describe('create answer', () => {
-    it.only<TestContext>('should post activity to inbox and save answer to Solid pod', async ctx => {
+    it<TestContext>('should post activity to inbox and save answer to Solid pod', async ctx => {
       const asking = await createRandomUser({ oidcIssuer: ctx.css.origin })
       const answering = await createRandomUser({ oidcIssuer: ctx.css.origin })
 
@@ -45,9 +45,19 @@ describe('POSTing to inbox', () => {
     })
   })
 
-  describe('update answer', () => {})
-  describe('delete answer', () => {})
-  describe('create vote', () => {})
-  describe('update vote', () => {})
-  describe('delete vote', () => {})
+  describe('update answer', () => {
+    it.todo('TODO')
+  })
+  describe('delete answer', () => {
+    it.todo('TODO')
+  })
+  describe('create vote', () => {
+    it.todo('TODO')
+  })
+  describe('update vote', () => {
+    it.todo('TODO')
+  })
+  describe('delete vote', () => {
+    it.todo('TODO')
+  })
 })

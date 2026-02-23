@@ -32,8 +32,6 @@ export class SpollCreate extends LitElement {
       resource: string
     }
 
-    console.log('submitting', data)
-
     const isContainer = data.resource.endsWith('/')
     const resourceUrl = isContainer
       ? new URL(crypto.randomUUID(), data.resource)
