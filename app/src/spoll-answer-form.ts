@@ -9,7 +9,7 @@ import { customElement, property, query } from 'lit/decorators.js'
 import { AnswerActivityShapeType } from './ldo/app.shapeTypes'
 import type { Answer, AnswerActivity, Poll } from './ldo/app.typings'
 import { dataset } from './state/dataset'
-import { webId } from './state/session'
+import { session, webId } from './state/session'
 
 @customElement('spoll-answer-form')
 export class SpollAnswerForm extends LitElement {
@@ -69,7 +69,7 @@ export class SpollAnswerForm extends LitElement {
 
     if (!this.poll?.inbox?.['@id']) throw new Error('Inbox not found!')
 
-    const inboxResponse = await fetch(this.poll.inbox['@id'], {
+    const inboxResponse = await session.authFetch(this.poll.inbox['@id'], {
       method: 'POST',
       headers: { 'content-type': 'application/ld+json' },
       body: JSON.stringify(compacted),

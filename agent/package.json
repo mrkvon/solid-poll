@@ -19,7 +19,9 @@
     "@types/n3": "^1.26.1",
     "jsonld": "^9.0.0",
     "koa": "^3.1.1",
-    "n3": "^1.26.0"
+    "n3": "^1.26.0",
+    "rdf-namespaces": "^1.16.0",
+    "rdf-validate-shacl": "^0.4.5"
   },
   "devDependencies": {
     "@solid/community-server": "^8.0.0-alpha.1",
@@ -28,7 +30,6 @@
     "css-authn": "^0.4.0",
     "lorem-ipsum": "^2.0.8",
     "parse-link-header": "^2.0.0",
-    "rdf-namespaces": "^1.16.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
