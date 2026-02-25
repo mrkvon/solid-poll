@@ -1,12 +1,15 @@
 import type { SolidLeaf } from '@ldo/connected-solid'
+import { createLdoDataset, getDataset, set } from '@ldo/ldo'
 import { SignalWatcher } from '@lit-labs/signals'
+import type { ContextDefinition } from 'jsonld'
 import { css, html, LitElement, type PropertyValues } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
 import { repeat } from 'lit/directives/repeat.js'
-import { PollShapeType } from './ldo/app.shapeTypes'
+import { PollShapeType, VoteActivityShapeType } from './ldo/app.shapeTypes'
+import type { Answer, Vote, VoteActivity } from './ldo/app.typings.js'
 import './spoll-answer-form.js'
 import { dataset } from './state/dataset'
-import { isLoggedIn } from './state/session'
+import { isLoggedIn, session, webId } from './state/session'
 
 @customElement('spoll-poll')
 export class SpollPoll extends SignalWatcher(LitElement) {
@@ -34,6 +37,62 @@ export class SpollPoll extends SignalWatcher(LitElement) {
     super.disconnectedCallback()
   }
 
+  async handleVote(answer: Answer) {
+    const ldods = createLdoDataset()
+    const vote = ldods.usingType(VoteActivityShapeType).fromSubject('#activity')
+    Object.assign(vote, {
+      type: set({ '@id': 'Create' }),
+      actor: { '@id': webId.get()! },
+      object: {
+        type: set({ '@id': 'VoteAction' }),
+        object: { '@id': answer['@id'] } as Answer,
+      } as Vote,
+    } satisfies VoteActivity)
+    const jsonld = await import('jsonld')
+
+    const jld = await jsonld.fromRDF(getDataset(vote))
+
+    const frame = {
+      '@context': [
+        'https://www.w3.org/ns/activitystreams',
+        {
+          tsioc: 'http://rdfs.org/sioc/types#',
+          sioc: 'http://rdfs.org/sioc/ns#',
+          schema: 'https://schema.org/',
+        },
+      ],
+      '@type': 'Create', // or Update, etc.
+    }
+
+    const framed = await jsonld.frame(jld, frame, {
+      embed: '@always',
+      explicit: false,
+      requireAll: false,
+    })
+
+    const compacted = await jsonld.compact(framed, [
+      'https://www.w3.org/ns/activitystreams',
+      {
+        tsioc: 'http://rdfs.org/sioc/types#',
+        sioc: 'http://rdfs.org/sioc/ns#',
+      },
+    ] as unknown as ContextDefinition)
+
+    const poll = dataset.usingType(PollShapeType).fromSubject(this.uri)
+    if (!poll?.inbox?.['@id']) throw new Error('Inbox not found!')
+
+    const inboxResponse = await session.authFetch(poll.inbox['@id'], {
+      method: 'POST',
+      headers: { 'content-type': 'application/ld+json' },
+      body: JSON.stringify(compacted),
+    })
+
+    if (!inboxResponse.ok) throw new Error('Writing to inbox not successful')
+
+    const presult = await this.resource.read()
+    if (presult.isError) throw presult
+  }
+
   render() {
     const poll = dataset.usingType(PollShapeType).fromSubject(this.uri)
     return html`
@@ -57,7 +116,16 @@ export class SpollPoll extends SignalWatcher(LitElement) {
         ${repeat(
           poll?.hasReply ?? [],
           answer => answer['@id'],
-          answer => html`<dd>${answer.content}</dd>`,
+          answer => {
+            const voteCount = answer.hasVote?.size ?? 0
+            return html`<dd data-testid="poll-answer">
+              ${answer.content}
+              <wa-button @click=${() => this.handleVote(answer)}>
+                <wa-icon name="arrow-up" label="vote" part="icon"></wa-icon>
+                <span data-testid="poll-answer-votes">${voteCount}</span>
+              </wa-button>
+            </dd>`
+          },
         )}
       </dl>
       ${isLoggedIn.get() && poll

@@ -5,7 +5,7 @@ import { solidIdentity } from '@soid/koa'
 import Koa from 'koa'
 import { Store } from 'n3'
 import { verifyActor } from './middlewares/authz.js'
-import { saveToPoll } from './middlewares/inbox.js'
+import { processActivity } from './middlewares/inbox.js'
 import { loadConfig } from './middlewares/loadConfig.js'
 import { solidAuth } from './middlewares/solidAuthn.js'
 import { validateActivity } from './middlewares/validate.js'
@@ -30,7 +30,7 @@ export const createApp = (config: AppConfig) => {
     .get('/', async ctx => {
       ctx.body = 'Hello World'
     })
-    .post('/inbox', solidAuth, validateActivity, verifyActor, saveToPoll)
+    .post('/inbox', solidAuth, validateActivity, verifyActor, processActivity)
     .use(solidIdentity(config.webId).routes())
 
   app

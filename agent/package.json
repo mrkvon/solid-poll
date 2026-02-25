@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc --project tsconfig.production.json",
+    "build": "tsc --project tsconfig.production.json && node ./copy-assets.js",
     "start": "npm run build && node dist/index.js",
     "test": "vitest"
   },
@@ -28,6 +28,7 @@
     "@types/koa": "^3.0.1",
     "@types/node": "^25.3.0",
     "css-authn": "^0.4.0",
+    "fast-glob": "^3.3.3",
     "lorem-ipsum": "^2.0.8",
     "parse-link-header": "^2.0.0",
     "tsx": "^4.21.0",

@@ -187,6 +187,91 @@ export const appSchema: Schema = {
               min: 0,
               max: -1,
             },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://spoll.example/has_vote',
+              valueExpr: 'https://example.com/Vote',
+              min: 0,
+              max: -1,
+            },
+          ],
+        },
+        extra: ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'],
+      },
+    },
+    {
+      id: 'https://example.com/Vote',
+      type: 'ShapeDecl',
+      shapeExpr: {
+        type: 'Shape',
+        expression: {
+          type: 'EachOf',
+          expressions: [
+            {
+              type: 'TripleConstraint',
+              predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+              valueExpr: {
+                type: 'NodeConstraint',
+                values: ['https://schema.org/VoteAction'],
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://schema.org/object',
+              valueExpr: 'https://example.com/Answer',
+              annotations: [
+                {
+                  type: 'Annotation',
+                  predicate: 'http://www.w3.org/2000/01/rdf-schema#comment',
+                  object: {
+                    value: 'answer that was voted on',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://schema.org/description',
+              valueExpr: {
+                type: 'NodeConstraint',
+                datatype: 'http://www.w3.org/2001/XMLSchema#string',
+              },
+              annotations: [
+                {
+                  type: 'Annotation',
+                  predicate: 'http://www.w3.org/2000/01/rdf-schema#comment',
+                  object: {
+                    value: 'vote reason or context',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'http://purl.org/dc/terms/creator',
+              valueExpr: {
+                type: 'NodeConstraint',
+                nodeKind: 'iri',
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'http://purl.org/dc/terms/created',
+              valueExpr: {
+                type: 'NodeConstraint',
+                datatype: 'http://www.w3.org/2001/XMLSchema#dateTime',
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'http://purl.org/dc/terms/modified',
+              valueExpr: {
+                type: 'NodeConstraint',
+                datatype: 'http://www.w3.org/2001/XMLSchema#dateTime',
+              },
+              min: 0,
+              max: -1,
+            },
           ],
         },
         extra: ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'],
@@ -220,6 +305,40 @@ export const appSchema: Schema = {
               type: 'TripleConstraint',
               predicate: 'https://www.w3.org/ns/activitystreams#object',
               valueExpr: 'https://example.com/Answer',
+            },
+          ],
+        },
+        extra: ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'],
+      },
+    },
+    {
+      id: 'https://example.com/VoteActivity',
+      type: 'ShapeDecl',
+      shapeExpr: {
+        type: 'Shape',
+        expression: {
+          type: 'EachOf',
+          expressions: [
+            {
+              type: 'TripleConstraint',
+              predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+              valueExpr: {
+                type: 'NodeConstraint',
+                values: ['https://www.w3.org/ns/activitystreams#Create'],
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://www.w3.org/ns/activitystreams#actor',
+              valueExpr: {
+                type: 'NodeConstraint',
+                nodeKind: 'iri',
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://www.w3.org/ns/activitystreams#object',
+              valueExpr: 'https://example.com/Vote',
             },
           ],
         },

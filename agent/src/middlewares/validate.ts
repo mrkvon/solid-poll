@@ -1,61 +1,43 @@
 import jsonld, { JsonLdDocument } from 'jsonld'
 import { Middleware } from 'koa'
-import { Parser, Store } from 'n3'
+import { Parser, Quad, Store } from 'n3'
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import SHACLValidator from 'rdf-validate-shacl'
 
-const shacl = `
-@prefix : <#> .
-@prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix as: <https://www.w3.org/ns/activitystreams#> .
-@prefix tsioc: <http://rdfs.org/sioc/types#> .
-@prefix sioc: <http://rdfs.org/sioc/ns#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-# Shape for Create Activity
-:CreateAnswerActivityShape a sh:NodeShape ;
-    sh:targetClass as:Create ;
-    
-    sh:property [
-        sh:path as:actor ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:nodeKind sh:IRI ;
-        sh:name "actor" ;
-    ] ;
-    
-    sh:property [
-        sh:path as:object ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:node :AnswerObjectShape ;
-        sh:name "object" ;
-    ] .
+// Folder containing your SHACL files
+const shapesDir = path.join(__dirname, 'shapes')
 
-# Shape for the Answer object
-:AnswerObjectShape a sh:NodeShape ;
-    sh:targetClass tsioc:Answer ;
-    
-    sh:property [
-        sh:path sioc:content ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:datatype xsd:string ;
-        sh:name "content" ;
-        sh:minLength 1 ;
-        sh:pattern "\\\\S" ;
-    ] ;
-    
-    sh:property [
-        sh:path sioc:reply_of ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:nodeKind sh:IRI ;
-        sh:name "reply of" ;
-    ] .`
+// Read all files in the folder
+const files = await fs.readdir(shapesDir)
+
+// Filter for files ending with .shacl
+const shaclFiles = files.filter(file => file.endsWith('.shacl'))
 
 const parser = new Parser()
+const shaclRdf: Quad[] = []
 
-const shaclRdf = parser.parse(shacl)
+for (const file of shaclFiles) {
+  const filePath = path.join(shapesDir, file)
+  const shaclContent = await fs.readFile(filePath, 'utf8')
+
+  // Parse SHACL to RDF quads
+  const quads = parser.parse(shaclContent)
+  shaclRdf.push(...quads)
+}
+
+// const __filename = fileURLToPath(import.meta.url)
+// const __dirname = path.dirname(__filename)
+// const filePath = path.join(__dirname, 'shapes', 'create-answer.shacl')
+// const shacl = await fs.readFile(filePath, 'utf8')
+
+// const parser = new Parser()
+
+// const shaclRdf = parser.parse(shacl)
 
 export const validateActivity: Middleware<{ data: Store }> = async (
   ctx,

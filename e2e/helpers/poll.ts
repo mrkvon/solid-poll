@@ -1,4 +1,6 @@
+import { expect } from '@playwright/test'
 import { LoremIpsum } from 'lorem-ipsum'
+import { randomUUID } from 'node:crypto'
 import { User } from './account'
 import { createAcl } from './acl'
 
@@ -8,7 +10,7 @@ function createPollTurtle(poll: Poll) {
   return `<${poll.uri}> a <http://rdfs.org/sioc/types#Question>, <http://rdfs.org/sioc/types#Poll>;
     <http://rdfs.org/sioc/ns#content> "${poll.question}";
     ${poll.detail ? `<http://purl.org/dc/terms/description> "${poll.detail?.replace('\n', '\\n')}"; ` : ''}
-    <http://purl.org/dc/terms/creator> <${poll.creator}>;
+    <http://purl.org/dc/terms/creator> <${poll.creator.account.webId}>;
     <http://purl.org/dc/terms/created> "${poll.created.toISOString()}"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
     <http://www.w3.org/ns/ldp#inbox> <${poll.inbox}> .`
 }
@@ -17,9 +19,16 @@ export interface Poll {
   uri: string
   question: string
   detail?: string
-  creator: string
+  creator: User
   created: Date
   inbox: string
+  answers: Map<string, Answer>
+}
+
+export interface Answer {
+  uri: string
+  answer: string
+  creator: User
 }
 
 export interface Bot {
@@ -46,8 +55,9 @@ export async function createPoll({
     question: lipsum.generateSentences(1),
     detail: lipsum.generateParagraphs(2),
     created: new Date(),
-    creator: user.account.webId,
+    creator: user,
     inbox: bot.inbox,
+    answers: new Map(),
     ...partialPoll,
   }
 
@@ -90,6 +100,53 @@ export async function createPublicPoll({
     user,
   })
   return poll
+}
+
+export async function createAnswer({
+  poll,
+  asking,
+  answering,
+  answer,
+}: {
+  poll: Poll
+  asking: User
+  answering: User
+  answer?: string
+}) {
+  const answerUri = new URL(poll.uri)
+  answerUri.hash = randomUUID()
+
+  answer ??= lipsum.generateSentences(1)
+
+  const response = await asking.fetch(poll.uri, {
+    method: 'PATCH',
+    headers: { 'content-type': 'text/n3' },
+    body: `
+    @prefix solid: <http://www.w3.org/ns/solid/terms#> .
+    @prefix sioc: <http://rdfs.org/sioc/ns#> .
+    @prefix tsioc: <http://rdfs.org/sioc/types#> .
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    <#mutation> a solid:InsertDeletePatch;
+      solid:inserts {
+        <${poll.uri}> sioc:has_reply <${answerUri}> .
+        <${answerUri}> a tsioc:Answer ;
+          sioc:reply_of <${poll.uri}> ;
+          sioc:content "${answer}" ;
+          dct:creator <${answering.account.webId}> ;
+          dct:created "${new Date().toISOString()}"^^xsd:dateTme .
+      } .
+    `,
+  })
+
+  expect(response.ok).toBe(true)
+
+  return {
+    uri: answerUri.toString(),
+    creator: answering,
+    answer,
+  }
 }
 
 export const bot: Bot = {

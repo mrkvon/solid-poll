@@ -61,6 +61,31 @@ export interface Answer {
   }
   created: string
   modified?: LdSet<string>
+  hasVote?: LdSet<Vote>
+}
+
+/**
+ * Vote Type
+ */
+export interface Vote {
+  '@id'?: string
+  '@context'?: LdoJsonldContext
+  type: LdSet<{
+    '@id': 'VoteAction'
+  }>
+  /**
+   * answer that was voted on
+   */
+  object: Answer
+  /**
+   * vote reason or context
+   */
+  description: string
+  creator: {
+    '@id': string
+  }
+  created: string
+  modified?: LdSet<string>
 }
 
 /**
@@ -76,4 +101,19 @@ export interface AnswerActivity {
     '@id': string
   }
   object: Answer
+}
+
+/**
+ * VoteActivity Type
+ */
+export interface VoteActivity {
+  '@id'?: string
+  '@context'?: LdoJsonldContext
+  type: LdSet<{
+    '@id': 'Create'
+  }>
+  actor: {
+    '@id': string
+  }
+  object: Vote
 }

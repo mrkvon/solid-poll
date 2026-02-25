@@ -3,6 +3,7 @@
 # Also check out https://shaperepo.com for examples of more shapes.
 
 PREFIX ex: <https://example.com/>
+PREFIX spoll: <https://spoll.example/>
 PREFIX as: <https://www.w3.org/ns/activitystreams#>
 PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -36,10 +37,28 @@ ex:Answer EXTRA a {
   dct:creator IRI ;
   dct:created xsd:dateTime ;
   dct:modified xsd:dateTime * ;
+  spoll:has_vote @ex:Vote * ;
+}
+
+ex:Vote EXTRA a {
+  a [ schema:VoteAction ] ;
+  schema:object @ex:Answer 
+    // rdfs:comment "answer that was voted on" ;
+  schema:description xsd:string
+    // rdfs:comment "vote reason or context" ;
+  dct:creator IRI ;
+  dct:created xsd:dateTime ;
+  dct:modified xsd:dateTime * ;
 }
 
 ex:AnswerActivity EXTRA a {
   a [ as:Create ] ;
   as:actor IRI ;
   as:object @ex:Answer ;
+}
+
+ex:VoteActivity EXTRA a {
+  a [ as:Create ] ;
+  as:actor IRI ;
+  as:object @ex:Vote ;
 }

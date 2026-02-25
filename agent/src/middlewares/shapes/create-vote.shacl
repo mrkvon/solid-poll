@@ -1,0 +1,29 @@
+@prefix : <#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix as: <https://www.w3.org/ns/activitystreams#> .
+@prefix tsioc: <http://rdfs.org/sioc/types#> .
+@prefix sioc: <http://rdfs.org/sioc/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <https://schema.org/> .
+
+
+# Shape for the Vote object
+:VoteObjectShape a sh:NodeShape ;
+    sh:targetClass schema:VoteAction ;
+    
+    sh:property [
+        sh:path schema:description ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:name "vote reason or context" ;
+        sh:minLength 1 ;
+        sh:pattern "\\S" ;
+    ] ;
+    
+    sh:property [
+        sh:path schema:object ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:name "answer that was voted on" ;
+    ] .
