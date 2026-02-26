@@ -225,4 +225,21 @@ export const appContext: LdoJsonldContext = {
     '@id': 'https://www.w3.org/ns/activitystreams#object',
     '@type': '@id',
   },
+  Remove: {
+    '@id': 'https://www.w3.org/ns/activitystreams#Remove',
+    '@context': {
+      type: {
+        '@id': '@type',
+        '@isCollection': true,
+      },
+      actor: {
+        '@id': 'https://www.w3.org/ns/activitystreams#actor',
+        '@type': '@id',
+      },
+      object: {
+        '@id': 'https://www.w3.org/ns/activitystreams#object',
+        '@type': '@id',
+      },
+    },
+  },
 }

@@ -33,3 +33,12 @@
           [ sh:node :AnswerObjectShape ]
         )
     ] .
+
+:RemoveActivityShape a sh:NodeShape ;
+    sh:targetClass as:Remove ;
+    sh:node :ActivityShape ;
+    sh:property [
+      sh:path as:object ;
+      sh:node :VoteObjectShape ;
+      sh:nodeKind sh:IRI
+    ] .

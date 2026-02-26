@@ -4,6 +4,7 @@ import {
   DataFactory,
   Literal,
   NamedNode,
+  Parser,
   Quad,
   Quad_Subject,
   Store,
@@ -30,13 +31,13 @@ export const processActivity: Middleware<{
   const allowedActivities = [
     namedNode(as.Create),
     namedNode(as.Update),
-    namedNode(as.Delete),
+    namedNode(as.Remove),
   ]
 
   const activitySubjects: Quad_Subject[] = []
   for (const activity of allowedActivities) {
     const subjects = store.getSubjects(namedNode(rdf.type), activity, null)
-    if (subjects.length === 1) activityType = namedNode(as.Create)
+    if (subjects.length === 1) activityType = activity
     if (subjects.length > 0) activitySubjects.push(...subjects)
   }
 
@@ -118,6 +119,59 @@ export const processActivity: Middleware<{
 
       targetResource = answer.value
       break
+    }
+    case `${as.Remove}${schema_https.VoteAction}`: {
+      // TODO check
+      const vote = objects[0]
+
+      assert(vote)
+      assert(vote instanceof NamedNode)
+
+      const dataResponse = await authFetch(vote.value, {
+        method: 'GET',
+        headers: { accept: 'text/turtle' },
+      })
+
+      assert(dataResponse.ok)
+
+      const data = await dataResponse.text()
+      const etag = dataResponse.headers.get('etag')
+
+      const parser = new Parser({ baseIRI: dataResponse.url })
+      const store = new Store(parser.parse(data))
+      const triplesToRemove = store.getQuads(vote, null, null, null)
+      triplesToRemove.push(...store.getQuads(null, null, vote, null))
+
+      const writer = new Writer({ format: 'text/n3' })
+
+      writer.addQuads(triplesToRemove)
+
+      const n3 = await new Promise((resolve, reject) =>
+        writer.end((error, result) => {
+          if (error) reject(error)
+          else resolve(result)
+        }),
+      )
+
+      const response = await authFetch(vote.value, {
+        method: 'PATCH',
+        headers: { 'content-type': 'text/n3', 'if-match': etag! },
+        body: `@prefix solid: <http://www.w3.org/ns/solid/terms#>.
+      @prefix sioc: <http://rdfs.org/sioc/ns#>.
+      @prefix tsioc: <http://rdfs.org/sioc/types#>.
+
+      <#mutation> a solid:InsertDeletePatch;
+        solid:deletes {
+          ${n3}
+        }.
+      `,
+      })
+
+      if (!response.ok) throw new HttpError('HTTP Error Response', response)
+
+      ctx.body = await response.text()
+      ctx.status = 200
+      return
     }
     default: {
       throw new Error('Activity not processed')

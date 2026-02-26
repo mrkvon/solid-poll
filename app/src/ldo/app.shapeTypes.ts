@@ -5,8 +5,10 @@ import type {
   Poll,
   Answer,
   Vote,
-  AnswerActivity,
-  VoteActivity,
+  CreateAnswerActivity,
+  RemoveAnswerActivity,
+  CreateVoteActivity,
+  RemoveVoteActivity,
 } from './app.typings'
 
 /**
@@ -43,19 +45,37 @@ export const VoteShapeType: ShapeType<Vote> = {
 }
 
 /**
- * AnswerActivity ShapeType
+ * CreateAnswerActivity ShapeType
  */
-export const AnswerActivityShapeType: ShapeType<AnswerActivity> = {
+export const CreateAnswerActivityShapeType: ShapeType<CreateAnswerActivity> = {
   schema: appSchema,
-  shape: 'https://example.com/AnswerActivity',
+  shape: 'https://example.com/CreateAnswerActivity',
   context: appContext,
 }
 
 /**
- * VoteActivity ShapeType
+ * RemoveAnswerActivity ShapeType
  */
-export const VoteActivityShapeType: ShapeType<VoteActivity> = {
+export const RemoveAnswerActivityShapeType: ShapeType<RemoveAnswerActivity> = {
   schema: appSchema,
-  shape: 'https://example.com/VoteActivity',
+  shape: 'https://example.com/RemoveAnswerActivity',
+  context: appContext,
+}
+
+/**
+ * CreateVoteActivity ShapeType
+ */
+export const CreateVoteActivityShapeType: ShapeType<CreateVoteActivity> = {
+  schema: appSchema,
+  shape: 'https://example.com/CreateVoteActivity',
+  context: appContext,
+}
+
+/**
+ * RemoveVoteActivity ShapeType
+ */
+export const RemoveVoteActivityShapeType: ShapeType<RemoveVoteActivity> = {
+  schema: appSchema,
+  shape: 'https://example.com/RemoveVoteActivity',
   context: appContext,
 }

@@ -6,8 +6,8 @@ import { createLdoDataset, getDataset, set } from '@ldo/ldo'
 import type { ContextDefinition } from 'jsonld'
 import { html, LitElement } from 'lit'
 import { customElement, property, query } from 'lit/decorators.js'
-import { AnswerActivityShapeType } from './ldo/app.shapeTypes'
-import type { Answer, AnswerActivity, Poll } from './ldo/app.typings'
+import { CreateAnswerActivityShapeType } from './ldo/app.shapeTypes'
+import type { Answer, CreateAnswerActivity, Poll } from './ldo/app.typings'
 import { dataset } from './state/dataset'
 import { session, webId } from './state/session'
 
@@ -24,7 +24,7 @@ export class SpollAnswerForm extends LitElement {
 
     const ldods = createLdoDataset()
     const activity = ldods
-      .usingType(AnswerActivityShapeType)
+      .usingType(CreateAnswerActivityShapeType)
       .fromSubject('#activity')
 
     Object.assign(activity, {
@@ -36,7 +36,7 @@ export class SpollAnswerForm extends LitElement {
         content: data.answer,
         replyOf: { '@id': this.poll['@id'] } as Poll,
       } as Answer,
-    } satisfies AnswerActivity)
+    } satisfies CreateAnswerActivity)
 
     const jsonld = await import('jsonld')
 

@@ -1,10 +1,13 @@
 import jsonld, { JsonLdDocument } from 'jsonld'
 import { Middleware } from 'koa'
-import { Parser, Quad, Store } from 'n3'
+import { DataFactory, Parser, Quad, Store } from 'n3'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { as, rdf } from 'rdf-namespaces'
 import SHACLValidator from 'rdf-validate-shacl'
+
+const { namedNode } = DataFactory
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -30,15 +33,6 @@ for (const file of shaclFiles) {
   shaclRdf.push(...quads)
 }
 
-// const __filename = fileURLToPath(import.meta.url)
-// const __dirname = path.dirname(__filename)
-// const filePath = path.join(__dirname, 'shapes', 'create-answer.shacl')
-// const shacl = await fs.readFile(filePath, 'utf8')
-
-// const parser = new Parser()
-
-// const shaclRdf = parser.parse(shacl)
-
 export const validateActivity: Middleware<{ data: Store }> = async (
   ctx,
   next,
@@ -49,6 +43,26 @@ export const validateActivity: Middleware<{ data: Store }> = async (
   })
   if (!Array.isArray(quads)) throw new Error('unexpected string output')
   const data = new Store(quads)
+
+  // check that they have a proper object.
+  const allowedActivities = [as.Create, as.Remove]
+  const ok = allowedActivities.some(
+    allowed =>
+      data.countQuads(null, namedNode(rdf.type), namedNode(allowed), null) > 0,
+  )
+
+  if (!ok) {
+    ctx.body = {
+      message: 'No supported Activity type found.',
+      expected: allowedActivities,
+      actual: data
+        .getObjects(null, namedNode(rdf.type), null)
+        .map(node => node.value),
+    }
+    ctx.status = 400
+    return
+  }
+
   const validator = new SHACLValidator(new Store(shaclRdf))
   const report = await validator.validate(data)
 

@@ -89,9 +89,9 @@ export interface Vote {
 }
 
 /**
- * AnswerActivity Type
+ * CreateAnswerActivity Type
  */
-export interface AnswerActivity {
+export interface CreateAnswerActivity {
   '@id'?: string
   '@context'?: LdoJsonldContext
   type: LdSet<{
@@ -104,13 +104,43 @@ export interface AnswerActivity {
 }
 
 /**
- * VoteActivity Type
+ * RemoveAnswerActivity Type
  */
-export interface VoteActivity {
+export interface RemoveAnswerActivity {
+  '@id'?: string
+  '@context'?: LdoJsonldContext
+  type: LdSet<{
+    '@id': 'Remove'
+  }>
+  actor: {
+    '@id': string
+  }
+  object: Answer
+}
+
+/**
+ * CreateVoteActivity Type
+ */
+export interface CreateVoteActivity {
   '@id'?: string
   '@context'?: LdoJsonldContext
   type: LdSet<{
     '@id': 'Create'
+  }>
+  actor: {
+    '@id': string
+  }
+  object: Vote
+}
+
+/**
+ * RemoveVoteActivity Type
+ */
+export interface RemoveVoteActivity {
+  '@id'?: string
+  '@context'?: LdoJsonldContext
+  type: LdSet<{
+    '@id': 'Remove'
   }>
   actor: {
     '@id': string

@@ -51,14 +51,26 @@ ex:Vote EXTRA a {
   dct:modified xsd:dateTime * ;
 }
 
-ex:AnswerActivity EXTRA a {
+ex:CreateAnswerActivity EXTRA a {
   a [ as:Create ] ;
   as:actor IRI ;
   as:object @ex:Answer ;
 }
 
-ex:VoteActivity EXTRA a {
+ex:RemoveAnswerActivity EXTRA a {
+  a [ as:Remove] ;
+  as:actor IRI ;
+  as:object @ex:Answer ;
+}
+
+ex:CreateVoteActivity EXTRA a {
   a [ as:Create ] ;
+  as:actor IRI ;
+  as:object @ex:Vote ;
+}
+
+ex:RemoveVoteActivity EXTRA a {
+  a [ as:Remove ] ;
   as:actor IRI ;
   as:object @ex:Vote ;
 }

@@ -22,7 +22,7 @@ test.describe('Answer poll', () => {
     const answer = lipsum.generateSentences(1)
     await page.getByRole('textbox', { name: 'answer' }).fill(answer)
     await page.getByRole('button', { name: 'post answer' }).click()
-    await expect(page.getByText(answer)).toBeVisible()
+    await expect(page.getByTestId('poll-answer').last()).toContainText(answer)
   })
 
   test.fixme('also include default upvote and optional explanation', () => {})

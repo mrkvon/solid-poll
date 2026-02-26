@@ -1,4 +1,6 @@
 import { LoremIpsum } from 'lorem-ipsum'
+import { randomUUID } from 'node:crypto'
+import { expect } from 'vitest'
 import { User } from './account.js'
 import { createAcl } from './acl.js'
 
@@ -20,6 +22,19 @@ export interface Poll {
   creator: string
   created: Date
   inbox: string
+  answers: Map<string, Answer>
+}
+
+export interface Answer {
+  uri: string
+  answer: string
+  creator: User
+  votes: Map<string, Vote>
+}
+
+export interface Vote {
+  uri: string
+  creator: User
 }
 
 export interface Bot {
@@ -48,6 +63,7 @@ export async function createPoll({
     created: new Date(),
     creator: user.account.webId,
     inbox: bot.inbox,
+    answers: new Map(),
     ...partialPoll,
   }
 
@@ -90,6 +106,94 @@ export async function createPublicPoll({
     user,
   })
   return poll
+}
+
+export async function createAnswer({
+  poll,
+  asking,
+  answering,
+  answer,
+}: {
+  poll: Poll
+  asking: User
+  answering: User
+  answer?: string
+}): Promise<Answer> {
+  const answerUri = new URL(poll.uri)
+  answerUri.hash = randomUUID()
+
+  answer ??= lipsum.generateSentences(1)
+
+  const response = await asking.fetch(poll.uri, {
+    method: 'PATCH',
+    headers: { 'content-type': 'text/n3' },
+    body: `
+    @prefix solid: <http://www.w3.org/ns/solid/terms#> .
+    @prefix sioc: <http://rdfs.org/sioc/ns#> .
+    @prefix tsioc: <http://rdfs.org/sioc/types#> .
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+    <#mutation> a solid:InsertDeletePatch;
+      solid:inserts {
+        <${poll.uri}> sioc:has_reply <${answerUri}> .
+        <${answerUri}> a tsioc:Answer ;
+          sioc:reply_of <${poll.uri}> ;
+          sioc:content "${answer}" ;
+          dct:creator <${answering.account.webId}> ;
+          dct:created "${new Date().toISOString()}"^^xsd:dateTme .
+      } .
+    `,
+  })
+
+  expect(response.ok).toBe(true)
+
+  return {
+    uri: answerUri.toString(),
+    creator: answering,
+    answer,
+    votes: new Map(),
+  }
+}
+
+export async function createVote({
+  asking,
+  voting,
+  answer,
+}: {
+  asking: User
+  voting: User
+  answer: Answer
+}): Promise<Vote> {
+  const voteUri = new URL(answer.uri)
+  voteUri.hash = randomUUID()
+
+  const response = await asking.fetch(voteUri, {
+    method: 'PATCH',
+    headers: { 'content-type': 'text/n3' },
+    body: `
+    @prefix solid: <http://www.w3.org/ns/solid/terms#> .
+    @prefix sioc: <http://rdfs.org/sioc/ns#> .
+    @prefix tsioc: <http://rdfs.org/sioc/types#> .
+    @prefix dct: <http://purl.org/dc/terms/> .
+    @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+    @prefix spoll: <https://spoll.example/> .
+    @prefix schema: <https://schema.org/> .
+
+    <#mutation> a solid:InsertDeletePatch;
+      solid:inserts {
+        <${answer.uri}> spoll:has_vote <${voteUri}> .
+        <${voteUri}> a schema:VoteAction ;
+          schema:object <${answer.uri}> ;
+          dct:creator <${voting.account.webId}> ;
+          dct:created "${new Date().toISOString()}"^^xsd:dateTme .
+      } .
+    `,
+  })
+
+  expect(response.ok).toBe(true)
+
+  return { uri: voteUri.toString(), creator: voting }
 }
 
 export const bot: Bot = {

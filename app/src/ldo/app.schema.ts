@@ -278,7 +278,7 @@ export const appSchema: Schema = {
       },
     },
     {
-      id: 'https://example.com/AnswerActivity',
+      id: 'https://example.com/CreateAnswerActivity',
       type: 'ShapeDecl',
       shapeExpr: {
         type: 'Shape',
@@ -312,7 +312,41 @@ export const appSchema: Schema = {
       },
     },
     {
-      id: 'https://example.com/VoteActivity',
+      id: 'https://example.com/RemoveAnswerActivity',
+      type: 'ShapeDecl',
+      shapeExpr: {
+        type: 'Shape',
+        expression: {
+          type: 'EachOf',
+          expressions: [
+            {
+              type: 'TripleConstraint',
+              predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+              valueExpr: {
+                type: 'NodeConstraint',
+                values: ['https://www.w3.org/ns/activitystreams#Remove'],
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://www.w3.org/ns/activitystreams#actor',
+              valueExpr: {
+                type: 'NodeConstraint',
+                nodeKind: 'iri',
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://www.w3.org/ns/activitystreams#object',
+              valueExpr: 'https://example.com/Answer',
+            },
+          ],
+        },
+        extra: ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'],
+      },
+    },
+    {
+      id: 'https://example.com/CreateVoteActivity',
       type: 'ShapeDecl',
       shapeExpr: {
         type: 'Shape',
@@ -325,6 +359,40 @@ export const appSchema: Schema = {
               valueExpr: {
                 type: 'NodeConstraint',
                 values: ['https://www.w3.org/ns/activitystreams#Create'],
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://www.w3.org/ns/activitystreams#actor',
+              valueExpr: {
+                type: 'NodeConstraint',
+                nodeKind: 'iri',
+              },
+            },
+            {
+              type: 'TripleConstraint',
+              predicate: 'https://www.w3.org/ns/activitystreams#object',
+              valueExpr: 'https://example.com/Vote',
+            },
+          ],
+        },
+        extra: ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'],
+      },
+    },
+    {
+      id: 'https://example.com/RemoveVoteActivity',
+      type: 'ShapeDecl',
+      shapeExpr: {
+        type: 'Shape',
+        expression: {
+          type: 'EachOf',
+          expressions: [
+            {
+              type: 'TripleConstraint',
+              predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+              valueExpr: {
+                type: 'NodeConstraint',
+                values: ['https://www.w3.org/ns/activitystreams#Remove'],
               },
             },
             {

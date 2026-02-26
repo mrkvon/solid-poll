@@ -14,7 +14,8 @@ export const verifyActor: Middleware<{ user: string; data: Store }> = async (
     null,
   )
 
-  if (actor.length !== 1) throw new Error('Exactly one actor expected.')
+  if (actor.length !== 1)
+    throw new Error(`Exactly one actor expected. Found ${actor.length}.`)
 
   if (authenticatedUser && actor[0] && authenticatedUser === actor[0].value) {
     await next()
